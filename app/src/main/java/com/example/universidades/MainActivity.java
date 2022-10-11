@@ -1,7 +1,10 @@
 package com.example.universidades;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -11,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -25,24 +29,17 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-class Universidad{
-    String nombre, pais, paginaWeb;
+import java.util.List;
 
 
-    public Universidad(String nombre, String paginaWeb, String pais) {
-        this.nombre = nombre;
-        this.paginaWeb = paginaWeb;
-        this.pais = pais;
-    }
-}
 public class MainActivity extends AppCompatActivity {
-    ArrayList<Universidad> Universidades = new ArrayList<Universidad>();
-
     ListView Lista;
     EditText pais, nombre;
-    Button llamarAPI;
+    Button llamarAPI,atras;
     Editable strPais,strNombre;
+    FragmentTransaction transaction;
+    Fragment BlankFragment, ItemFragment;
+    ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +47,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         llamarAPI= findViewById(R.id.llamarAPI);
+        scrollView= findViewById(R.id.scrollView);
 
+        atras = findViewById(R.id.atras);
         pais = findViewById(R.id.pais);
         nombre = findViewById(R.id.nombre);
-        Lista = findViewById(R.id.Lista);
+
+        scrollView.setVisibility(View.INVISIBLE);
+
         llamarAPI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 strPais =  pais.getText();
                 strNombre = nombre.getText();
                 LeerApi();
+                scrollView.setVisibility(View.VISIBLE);
+            }
+        });
+        atras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Universidad Universi: Universidad.getLista()){
+                    Log.i("Val", Universi.nombre + " " + Universi.paginaWeb);
+                }
             }
         });
     }
@@ -77,14 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
                     for (int i = 0; i < json.length(); i++) {
                         JSONObject Object = json.getJSONObject(i);
-                        Universidades.add(new Universidad(Object.getString("name"),Object.getString("domains"),Object.getString("country")));
+                        Universidad.addUniversidad(new Universidad(Object.getString("name"),Object.getString("domains"),Object.getString("country")));
                     }
-                    for (Universidad Universi: Universidades){
-                        Log.i("Val", Universi.nombre + " " + Universi.paginaWeb);
-                    }
-
-                    ArrayAdapter  adapter = new ArrayAdapter(MainActivity.this, R.layout.activity_main, Universidades);
-                    Lista.setAdapter(adapter);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
