@@ -36,10 +36,11 @@ public class MainActivity extends AppCompatActivity {
     ListView Lista;
     EditText pais, nombre;
     Button llamarAPI,atras;
-    Editable strPais,strNombre;
-    FragmentTransaction transaction;
-    Fragment BlankFragment, ItemFragment;
-    ScrollView scrollView;
+    String strPais,strNombre;
+    ScrollView sv;
+    ArrayAdapter<String> mAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,21 +48,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         llamarAPI= findViewById(R.id.llamarAPI);
-        scrollView= findViewById(R.id.scrollView);
 
         atras = findViewById(R.id.atras);
         pais = findViewById(R.id.pais);
         nombre = findViewById(R.id.nombre);
+        sv = findViewById(R.id.scrollV);
+        sv.setVisibility(View.INVISIBLE);
 
-        scrollView.setVisibility(View.INVISIBLE);
+
 
         llamarAPI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                strPais =  pais.getText();
-                strNombre = nombre.getText();
+                strPais =  String.valueOf(pais.getText());
+                strNombre = String.valueOf(nombre.getText());
+                Bundle bundle = new Bundle();
+                bundle.putString("Nombre", strNombre);
+                bundle.putString("Pais", strPais);
+                ItemFragment universidadFragment = new ItemFragment();
+                universidadFragment.setArguments(bundle);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragmentContainerView,universidadFragment)
+                        .commit();
                 LeerApi();
-                scrollView.setVisibility(View.VISIBLE);
+                sv.setVisibility(View.VISIBLE);
             }
         });
         atras.setOnClickListener(new View.OnClickListener() {
@@ -82,14 +93,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-
                     JSONArray json = new JSONArray(response);
-
                     for (int i = 0; i < json.length(); i++) {
                         JSONObject Object = json.getJSONObject(i);
                         Universidad.addUniversidad(new Universidad(Object.getString("name"),Object.getString("domains"),Object.getString("country")));
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

@@ -21,15 +21,9 @@ public class Universidad {
         return ListaUniversidades;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
     public String getPais() {
         return pais;
     }
 
-    public String getPaginaWeb() {
-        return paginaWeb;
-    }
+
 }

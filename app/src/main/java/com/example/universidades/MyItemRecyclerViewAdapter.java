@@ -1,11 +1,9 @@
 package com.example.universidades;
 
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.universidades.placeholder.PlaceholderContent.PlaceholderItem;
@@ -19,25 +17,24 @@ import java.util.List;
  */
 public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Universidad> mValues;
+    private final List<PlaceholderItem> mValues;
 
-    public MyItemRecyclerViewAdapter(List<Universidad> items) {
+    public MyItemRecyclerViewAdapter(List<PlaceholderItem> items) {
         mValues = items;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        Button btn = null;
-        return new ViewHolder(FragmentItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false), btn);
+    return new ViewHolder(FragmentItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
 
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getNombre());
-
+        holder.mIdView.setText(mValues.get(position).id);
+        holder.mContentView.setText(mValues.get(position).content);
     }
 
     @Override
@@ -45,25 +42,20 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mIdView;
-        public final Button btn;
-        public Universidad mItem;
+        public final TextView mContentView;
+        public PlaceholderItem mItem;
 
-        public ViewHolder(FragmentItemBinding binding, Button btn) {
-            super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            this.btn = binding.btnLink;
-        }
+    public ViewHolder(FragmentItemBinding binding) {
+      super(binding.getRoot());
+      mIdView = binding.itemNumber;
+      mContentView = binding.content;
+    }
 
         @Override
         public String toString() {
-            return super.toString() + " '" ;
-        }
-
-        @Override
-        public void onClick(View view) {
-            
+            return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
 }
