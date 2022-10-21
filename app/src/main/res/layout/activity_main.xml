@@ -74,8 +74,8 @@
         android:layout_height="310dp"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@+id/atras"
-        tools:layout_editor_absoluteX="52dp"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints,SpeakableTextPresentCheck"
+        tools:layout_editor_absoluteX="52dp">
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -2,15 +2,16 @@ package com.example.universidades;
 
 import android.content.Context;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.example.universidades.placeholder.PlaceholderContent;
 
 /**
@@ -18,11 +19,17 @@ import com.example.universidades.placeholder.PlaceholderContent;
  */
 public class ItemFragment extends Fragment {
 
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public ItemFragment() {
+    }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
@@ -32,13 +39,6 @@ public class ItemFragment extends Fragment {
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public ItemFragment() {
     }
 
     @Override
@@ -53,19 +53,6 @@ public class ItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        try {
-            String strNombreUni = getArguments().getString("Nombre");
-            String strPais = getArguments().getString("Pais");
-            if (strNombreUni == null){
-                Log.i("prueba", " aca");
-            }else {
-                Log.i("prueba2", strNombreUni);
-            }
-
-        }catch (Exception e){
-            e.getMessage();
-        }
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         // Set the adapter
@@ -77,7 +64,7 @@ public class ItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS));
+            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(MainActivity.universidades));
         }
         return view;
     }

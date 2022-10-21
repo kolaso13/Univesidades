@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     String strPais,strNombre;
     ScrollView sv;
     ArrayAdapter<String> mAdapter;
-
+    static List<Universidad> universidades = new ArrayList<Universidad>();
 
 
     @Override
@@ -60,35 +60,31 @@ public class MainActivity extends AppCompatActivity {
         llamarAPI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                strPais =  String.valueOf(pais.getText());
-                strNombre = String.valueOf(nombre.getText());
-                Bundle bundle = new Bundle();
-                bundle.putString("Nombre", strNombre);
-                bundle.putString("Pais", strPais);
+                LeerApi();
+
                 ItemFragment universidadFragment = new ItemFragment();
-                universidadFragment.setArguments(bundle);
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .detach(universidadFragment)
+                        .commit();
+
                 getSupportFragmentManager()
                         .beginTransaction()
                         .add(R.id.fragmentContainerView,universidadFragment)
                         .commit();
-                LeerApi();
+
                 sv.setVisibility(View.VISIBLE);
             }
         });
-        atras.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (Universidad Universi: Universidad.getLista()){
-                    Log.i("Val", Universi.nombre + " " + Universi.paginaWeb);
-                }
-            }
-        });
+
+
+
     }
-
-
     private void LeerApi() {
-        String url = "http://universities.hipolabs.com/search?country="+strPais+"&name="+strNombre;
+        strPais =  String.valueOf(pais.getText());
+        strNombre = String.valueOf(nombre.getText());
 
+        String url = "http://universities.hipolabs.com/search?country="+strPais+"&name="+strNombre;
         StringRequest postResquest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -96,8 +92,10 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray json = new JSONArray(response);
                     for (int i = 0; i < json.length(); i++) {
                         JSONObject Object = json.getJSONObject(i);
-                        Universidad.addUniversidad(new Universidad(Object.getString("name"),Object.getString("domains"),Object.getString("country")));
+                        Universidad universidad = new Universidad(Object.getString("name"),Object.getString("domains"),Object.getString("country"));
+                        universidades.add(universidad);
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
