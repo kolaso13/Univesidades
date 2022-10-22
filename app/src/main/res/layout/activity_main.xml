@@ -59,5 +59,14 @@
         app:layout_constraintStart_toStartOf="@+id/pais"
         app:layout_constraintTop_toBottomOf="@+id/pais" />
 
+    <Button
+        android:id="@+id/Preferencias"
+        android:layout_width="169dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:text="Guardar"
+        app:layout_constraintStart_toStartOf="@+id/llamarAPI"
+        app:layout_constraintTop_toBottomOf="@+id/llamarAPI" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

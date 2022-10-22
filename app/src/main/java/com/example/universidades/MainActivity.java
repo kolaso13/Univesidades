@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -36,7 +38,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     ListView Lista;
     EditText pais, nombre;
-    Button llamarAPI,atras;
+    Button llamarAPI,atras, preferencias;
     String strPais,strNombre;
     ScrollView sv;
     ArrayAdapter<String> mAdapter;
@@ -47,17 +49,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         llamarAPI= findViewById(R.id.llamarAPI);
-
-        atras = findViewById(R.id.atras);
+        preferencias = findViewById(R.id.Preferencias);
         pais = findViewById(R.id.pais);
         nombre = findViewById(R.id.nombre);
+
+        cargarPreferencias();
 
         llamarAPI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LeerApi();
+            }
+        });
+        preferencias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                guardarPreferencias();
             }
         });
     }
@@ -88,6 +96,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Volley.newRequestQueue(this).add(postResquest);
+    }
+    private void guardarPreferencias() {
+        SharedPreferences preferences = getSharedPreferences("prefguardadas", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        String paisG = pais.getText().toString();
+        editor.putString("paisG",paisG);
+        pais.setText(paisG);
+
+        String nombreG = nombre.getText().toString();
+        editor.putString("nombreG",nombreG);
+        nombre.setText(nombreG);
+
+        editor.commit();
+    }
+
+    private void cargarPreferencias(){
+        SharedPreferences preferences = getSharedPreferences("prefguardadas", Context.MODE_PRIVATE);
+        String paisG = preferences.getString("paisG", "");
+        pais.setText(paisG);
+        String nombreG = preferences.getString("nombreG", "");
+        nombre.setText(nombreG);
     }
 
 }
