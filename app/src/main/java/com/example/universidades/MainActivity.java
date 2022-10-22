@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -52,38 +53,17 @@ public class MainActivity extends AppCompatActivity {
         atras = findViewById(R.id.atras);
         pais = findViewById(R.id.pais);
         nombre = findViewById(R.id.nombre);
-        sv = findViewById(R.id.scrollV);
-        sv.setVisibility(View.INVISIBLE);
-
-
 
         llamarAPI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LeerApi();
-
-                ItemFragment universidadFragment = new ItemFragment();
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .detach(universidadFragment)
-                        .commit();
-
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.fragmentContainerView,universidadFragment)
-                        .commit();
-
-                sv.setVisibility(View.VISIBLE);
             }
         });
-
-
-
     }
     private void LeerApi() {
         strPais =  String.valueOf(pais.getText());
         strNombre = String.valueOf(nombre.getText());
-
         String url = "http://universities.hipolabs.com/search?country="+strPais+"&name="+strNombre;
         StringRequest postResquest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
@@ -92,10 +72,11 @@ public class MainActivity extends AppCompatActivity {
                     JSONArray json = new JSONArray(response);
                     for (int i = 0; i < json.length(); i++) {
                         JSONObject Object = json.getJSONObject(i);
-                        Universidad universidad = new Universidad(Object.getString("name"),Object.getString("domains"),Object.getString("country"));
+                        Universidad universidad = new Universidad(Object.getString("name"),Object.getString("country"),Object.getString("web_pages").substring(2,Object.getString("web_pages").length()-2));
                         universidades.add(universidad);
                     }
-
+                    Intent newActivity = new Intent(MainActivity.this, MainActivity2.class);
+                    MainActivity.this.startActivity(newActivity);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

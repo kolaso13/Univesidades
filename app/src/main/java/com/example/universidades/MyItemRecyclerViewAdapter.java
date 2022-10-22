@@ -2,9 +2,12 @@ package com.example.universidades;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.universidades.placeholder.PlaceholderContent.PlaceholderItem;
@@ -23,9 +26,10 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public MyItemRecyclerViewAdapter(List<Universidad> items) {
         mValues = items;
     }
-
+    Context context;
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        context = parent.getContext();
         return new ViewHolder(FragmentItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
@@ -33,7 +37,17 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getNombre());
-        holder.mContentView.setText(mValues.get(position).getNombre());
+        holder.mContentView.setText("Ir");
+        int posicion = position;
+
+        holder.mContentView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(context, MainActivity3.class);
+                myIntent.putExtra("url", mValues.get(posicion).getPaginaWeb());
+                context.startActivity(myIntent);
+            }
+        });
     }
 
     @Override
@@ -43,7 +57,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mIdView;
-        public final TextView mContentView;
+        public final Button mContentView;
         public Universidad  mItem;
 
         public ViewHolder(FragmentItemBinding binding) {
